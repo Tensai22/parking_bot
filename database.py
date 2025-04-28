@@ -3,7 +3,11 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 import config
 
 # Создаем асинхронный движок
-engine = create_async_engine(config.DB_URL, echo=True)
+engine = create_async_engine(
+    config.DATABASE_URL,  # исправил название переменной
+    echo=True,
+    connect_args={"sslmode": "require"}  # добавил SSL для Render
+)
 
 # Создаем фабрику сессий
 async_session = sessionmaker(
