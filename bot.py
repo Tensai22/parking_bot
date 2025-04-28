@@ -12,21 +12,7 @@ from datetime import datetime, timedelta, timezone
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from typing import Optional
-
-import asyncio
-import random
-from aiogram import Bot, Dispatcher, types, F
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram.filters import Command
-from aiogram.fsm.storage.memory import MemoryStorage
-from sqlalchemy.future import select
-import config
-from database import async_session
-from models import ParkingSpot, User
-from datetime import datetime, timedelta, timezone
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import StatesGroup, State
-from typing import Optional
+from sqlalchemy import func 
 
 bot = Bot(token=config.BOT_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
@@ -312,11 +298,11 @@ async def check_parking_expiration():
                 expired_spots = await session.execute(
                     select(ParkingSpot)
                     .where(
-                        ParkingSpot.end_time <= now,
-                        ParkingSpot.parent_spot_id.is_not(None)
-                    )
-                    .with_for_update()
+                        func.timezone('UTC', ParkingSpot.end_time) <= now,
+                ParkingSpot.parent_spot_id.is_not(None)
                 )
+                .with_for_update()
+            )   
                 expired_spots = expired_spots.scalars().all()
 
                 for spot in expired_spots:
