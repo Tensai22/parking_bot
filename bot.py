@@ -338,9 +338,11 @@ async def check_parking_expiration():
 
 async def main():
     asyncio.create_task(check_parking_expiration())
-
+    await bot.delete_webhook(drop_pending_updates=True)
+    asyncio.create_task(check_parking_expiration())
     print("Бот запущен и слушает сообщения...")
     await dp.start_polling(bot)
+
 
 
 if __name__ == "__main__":
