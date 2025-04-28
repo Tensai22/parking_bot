@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: telegram-parking-bot
+    env: python
+    plan: free
+    buildCommand: ""
+    startCommand: python bot.py
+    region: oregon  # 👈 изменено
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: parking_postgresql_tensai
+          property: connectionString
+
+databases:
+  - name: parking_postgresql_tensai
+    region: oregon  # 👈 изменено
+    plan: free
