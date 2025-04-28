@@ -13,6 +13,21 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from typing import Optional
 
+import asyncio
+import random
+from aiogram import Bot, Dispatcher, types, F
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.filters import Command
+from aiogram.fsm.storage.memory import MemoryStorage
+from sqlalchemy.future import select
+import config
+from database import async_session
+from models import ParkingSpot, User
+from datetime import datetime, timedelta, timezone
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import StatesGroup, State
+from typing import Optional
+
 bot = Bot(token=config.BOT_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
 
